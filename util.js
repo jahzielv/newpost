@@ -9,7 +9,13 @@ function checkPostsDir() {
 }
 
 function createFMFile(matterArr) {
-    fs.writeFile("./fm.json", matterArr.join("\n"), err => {
+    let fmObj = {};
+    matterArr.forEach(element => {
+        let split = element.split(":");
+        fmObj[split[0]] = split[1];
+    });
+    fmObj.title = "";
+    fs.writeFile("./fm.json", JSON.stringify(fmObj), err => {
         if (err) throw err;
     });
 }
@@ -39,6 +45,7 @@ function createPost(title) {
     }
     checkPostsDir();
     let frontMatter = JSON.parse(fs.readFileSync("fm.json", "utf8"));
+    frontMatter.title = title;
     let frontMatterStr = createFrontMatter(frontMatter);
     fs.writeFile("./_posts/" + getDate() + title + ".md", frontMatterStr, err => {
         if (err) throw err;

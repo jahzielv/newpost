@@ -1,11 +1,7 @@
 #!/usr/bin/env node
 let yargs = require("yargs");
-let prompt = require("prompt");
 const util = require("./util");
-const readline = require("readline").createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+const readlineSync = require("readline-sync");
 
 let argv = yargs
     .scriptName("ghpost")
@@ -18,24 +14,14 @@ let argv = yargs
 
 let postName = argv._[0];
 
-let matterArr = [];
-function getFrontMatterInput() {
-    readline.question("", matter => {
-        if (matter === "q") {
-            return readline.close();
-        }
-        matterArr.push(matter);
-        getFrontMatterInput();
-    });
-}
-
 if (argv._.includes("init")) {
-    // prompt.start();
-    // prompt.get(["enter some front matter"], (err, result) => {
-    //     console.log(result);
-    // });
     console.log("Enter some front matter:");
-    getFrontMatterInput();
+    let matterArr = [];
+    readlineSync.promptLoop(input => {
+        let over = input === "q";
+        if (!over) matterArr.push(input);
+        return over;
+    });
     util.createFMFile(matterArr);
     console.log("fm.json created!");
 } else {
@@ -47,4 +33,3 @@ if (argv._.includes("init")) {
         );
     }
 }
-// console.log(argv);

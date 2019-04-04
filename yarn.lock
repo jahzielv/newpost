@@ -400,6 +400,11 @@ read@1.0.x:
   dependencies:
     mute-stream "~0.0.4"
 
+readline-sync@^1.4.9:
+  version "1.4.9"
+  resolved "https://registry.yarnpkg.com/readline-sync/-/readline-sync-1.4.9.tgz#3eda8e65f23cd2a17e61301b1f0003396af5ecda"
+  integrity sha1-PtqOZfI80qF+YTAbHwADOWr17No=
+
 require-directory@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/require-directory/-/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
