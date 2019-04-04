@@ -1,0 +1,11 @@
+{
+  "name": "ghpost",
+  "version": "0.0.1",
+  "description": "Make a blog post MD file for GitHub Pages.",
+  "main": "index.js",
+  "author": "jve",
+  "license": "MIT",
+  "dependencies": {
+    "yargs": "^13.2.2"
+  }
+}
