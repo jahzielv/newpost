@@ -6,6 +6,10 @@
   "author": "jve",
   "license": "MIT",
   "dependencies": {
+    "prompt": "^1.0.0",
     "yargs": "^13.2.2"
+  },
+  "bin": {
+    "ghpost": "./cli.js"
   }
 }

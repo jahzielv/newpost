@@ -8,6 +8,12 @@ function checkPostsDir() {
     }
 }
 
+function createFMFile(matterArr) {
+    fs.writeFile("./fm.json", matterArr.join("\n"), err => {
+        if (err) throw err;
+    });
+}
+
 function createFrontMatter(fm) {
     let outputStr = "---\n";
     for (var prop in fm) {
@@ -15,14 +21,6 @@ function createFrontMatter(fm) {
     }
     outputStr += "---\n";
     return outputStr;
-}
-
-function createPost(title, frontMatter) {
-    checkPostsDir();
-    let frontMatterStr = createFrontMatter(frontMatter);
-    fs.writeFile("./_posts/" + getDate() + title + ".md", frontMatterStr, err => {
-        if (err) throw err;
-    });
 }
 
 function getDate() {
@@ -33,6 +31,21 @@ function getDate() {
     return year + "-" + month + "-" + day + "-";
 }
 
-let frontMatter = JSON.parse(fs.readFileSync("fm.json", "utf8"));
+function createPost(title) {
+    try {
+        fs.statSync("./fm.json");
+    } catch (err) {
+        throw err;
+    }
+    checkPostsDir();
+    let frontMatter = JSON.parse(fs.readFileSync("fm.json", "utf8"));
+    let frontMatterStr = createFrontMatter(frontMatter);
+    fs.writeFile("./_posts/" + getDate() + title + ".md", frontMatterStr, err => {
+        if (err) throw err;
+    });
+}
 
-createPost("my_post", frontMatter);
+module.exports = {
+    createPost: createPost,
+    createFMFile: createFMFile
+};
