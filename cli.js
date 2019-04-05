@@ -15,15 +15,17 @@ let argv = yargs
 let postName = argv._[0];
 
 if (argv._.includes("init")) {
-    console.log("Enter some front matter:");
+    console.log("Enter some front matter in this format: '<property>:<value>'");
+    console.log("Type 'q' and hit enter to create your fm.json!");
     let matterArr = [];
     readlineSync.promptLoop(input => {
         let over = input === "q";
         if (!over) matterArr.push(input);
         return over;
     });
-    util.createFMFile(matterArr);
-    console.log("fm.json created!");
+    util.createFMFile(matterArr)
+        .then(() => console.log("fm.json created!"))
+        .catch(err => console.log("Error in creating fm.json: ", err));
 } else {
     try {
         util.createPost(postName);

@@ -1,4 +1,5 @@
 const fs = require("fs");
+const fsPromises = require("fs").promises;
 
 function checkPostsDir() {
     try {
@@ -15,9 +16,7 @@ function createFMFile(matterArr) {
         fmObj[split[0]] = split[1];
     });
     fmObj.title = "";
-    fs.writeFile("./fm.json", JSON.stringify(fmObj), err => {
-        if (err) throw err;
-    });
+    return fsPromises.writeFile("./fm.json", JSON.stringify(fmObj));
 }
 
 function createFrontMatter(fm) {
