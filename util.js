@@ -9,15 +9,28 @@ function checkPostsDir() {
     }
 }
 
-function createFMFile(matterArr) {
+async function createFMFile(matterArr) {
     let fmObj = {};
     matterArr.forEach(element => {
         let split = element.split(":");
         fmObj[split[0]] = split[1];
     });
     fmObj.title = "";
-    return fsPromises.writeFile("./fm.json", JSON.stringify(fmObj));
+    // return fsPromises.writeFile("./fm.json", JSON.stringify(fmObj));
+    // let packageJsonObj = JSON.parse(fs.readFileSync("./package.json", "utf8"));
+    // packageJsonObj.newpost.frontMatter = fmObj;
+    try {
+        let packageJson = await fsPromises
+            .readFile("./package.json", "utf8")
+            .then(data => JSON.parse(data));
+        packageJson.newpost = { frontMatter: fmObj };
+        return fsPromises.writeFile("./package.json", JSON.stringify(packageJson));
+    } catch (err) {
+        throw err;
+    }
 }
+
+createFMFile(["yeet:yote"]);
 
 function createFrontMatter(fm) {
     let outputStr = "---\n";
@@ -43,7 +56,8 @@ function createPost(title) {
         throw err;
     }
     checkPostsDir();
-    let frontMatter = JSON.parse(fs.readFileSync("fm.json", "utf8"));
+    let frontMatter = JSON.parse(fs.readFileSync("package.json", "utf8")).newpost
+        .frontMatter;
     frontMatter.title = title;
     let frontMatterStr = createFrontMatter(frontMatter);
     fs.writeFile("./_posts/" + getDate() + title + ".md", frontMatterStr, err => {
