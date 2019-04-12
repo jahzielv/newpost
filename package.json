@@ -1,1 +1,22 @@
-{"name":"newpost","version":"0.0.1","description":"Make a blog post MD file for GitHub Pages.","main":"index.js","author":"jve","license":"MIT","dependencies":{"prompt":"^1.0.0","readline-sync":"^1.4.9","terminal-link":"^1.2.0","yargs":"^13.2.2"},"bin":{"newpost":"./cli.js"},"newpost":{"frontMatter":{"yeet":"yote","title":""}}}
+{
+    "name": "newpost",
+    "version": "0.0.1",
+    "description": "Make a blog post MD file for GitHub Pages.",
+    "main": "index.js",
+    "author": "jve",
+    "license": "MIT",
+    "dependencies": {
+        "chalk": "^2.4.2",
+        "prompt": "^1.0.0",
+        "readline-sync": "^1.4.9",
+        "terminal-link": "^1.2.0",
+        "yargs": "^13.2.2"
+    },
+    "bin": {
+        "newpost": "./cli.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "github.com/jahzielv/newpost"
+    }
+}

@@ -1,8 +1,7 @@
 #!/usr/bin/env node --no-warnings
 let yargs = require("yargs");
-const util = require("./util");
+const { addFrontMatter, createPost } = require("./util");
 const readlineSync = require("readline-sync");
-const terminalLink = require("terminal-link");
 
 let argv = yargs
     .scriptName("newpost")
@@ -11,14 +10,20 @@ let argv = yargs
     .command("init", "Create a new front matter configuration")
     .command(
         "[postname]",
-        "Creates a new post with front matter specified in your front matter config."
+        "Creates a new post with front matter specified in your front matter config. title is set to [postname] by default."
     )
     .demandCommand(1)
+    .alias("t", "title")
+    .nargs("t", 1)
+    .describe("t", "Pass a custom title for the post.")
     .example(
         "$0 my_new_post",
         "Creates a new MD blog post called <currentDate>-my_new_post.md"
     )
-    .epilog("Made with 🍞 by " + terminalLink("JVE", "https://jahz.co")).argv;
+    .example(
+        "$0 myNewPost -t myCustomTitle",
+        "Create a new post with the title front matter member set to myCustomTitle."
+    ).argv;
 
 if (argv._.includes("init")) {
     console.log("Enter some front matter in this format: '<property>:<value>'");
@@ -29,16 +34,18 @@ if (argv._.includes("init")) {
         if (!over) matterArr.push(input);
         return over;
     });
-    util.createFMFile(matterArr)
+    addFrontMatter(matterArr)
         .then(() => console.log("Config created!"))
         .catch(err => console.log("Error in creating newpost config: ", err));
 } else {
     try {
         let postName = argv._[0];
-        util.createPost(postName);
+        if (argv.t) {
+            createPost(postName, argv.t);
+        } else {
+            createPost(postName, postName);
+        }
     } catch (err) {
-        console.log(
-            "Didn't find an fm.json configuration file. Please run ghpost init to create one!"
-        );
+        console.log(err.message);
     }
 }

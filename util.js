@@ -9,30 +9,7 @@ function checkPostsDir() {
     }
 }
 
-async function createFMFile(matterArr) {
-    let fmObj = {};
-    matterArr.forEach(element => {
-        let split = element.split(":");
-        fmObj[split[0]] = split[1];
-    });
-    fmObj.title = "";
-    // return fsPromises.writeFile("./fm.json", JSON.stringify(fmObj));
-    // let packageJsonObj = JSON.parse(fs.readFileSync("./package.json", "utf8"));
-    // packageJsonObj.newpost.frontMatter = fmObj;
-    try {
-        let packageJson = await fsPromises
-            .readFile("./package.json", "utf8")
-            .then(data => JSON.parse(data));
-        packageJson.newpost = { frontMatter: fmObj };
-        return fsPromises.writeFile("./package.json", JSON.stringify(packageJson));
-    } catch (err) {
-        throw err;
-    }
-}
-
-createFMFile(["yeet:yote"]);
-
-function createFrontMatter(fm) {
+function createFMString(fm) {
     let outputStr = "---\n";
     for (var prop in fm) {
         outputStr += prop + ": " + fm[prop] + "\n";
@@ -49,23 +26,42 @@ function getDate() {
     return year + "-" + month + "-" + day + "-";
 }
 
-function createPost(title) {
-    try {
-        fs.statSync("./fm.json");
-    } catch (err) {
-        throw err;
-    }
+function createPost(title, fmTitle) {
     checkPostsDir();
-    let frontMatter = JSON.parse(fs.readFileSync("package.json", "utf8")).newpost
-        .frontMatter;
-    frontMatter.title = title;
-    let frontMatterStr = createFrontMatter(frontMatter);
+    let configObj = JSON.parse(fs.readFileSync("package.json", "utf8")).newpost;
+    if (!configObj) {
+        throw new Error(
+            "No front matter found; run newpost init to add some front matter!"
+        );
+    }
+    let frontMatter = configObj.frontMatter;
+
+    frontMatter.title = fmTitle;
+    let frontMatterStr = createFMString(frontMatter);
     fs.writeFile("./_posts/" + getDate() + title + ".md", frontMatterStr, err => {
         if (err) throw err;
     });
 }
 
+async function addFrontMatter(matterArr) {
+    let fmObj = {};
+    matterArr.forEach(element => {
+        let split = element.split(":");
+        fmObj[split[0]] = split[1];
+    });
+    fmObj.title = "";
+    try {
+        let packageJson = await fsPromises
+            .readFile("./package.json", "utf8")
+            .then(data => JSON.parse(data));
+        packageJson.newpost = { frontMatter: fmObj };
+        return fsPromises.writeFile("./package.json", JSON.stringify(packageJson));
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = {
     createPost: createPost,
-    createFMFile: createFMFile
+    addFrontMatter: addFrontMatter
 };
