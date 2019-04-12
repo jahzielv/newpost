@@ -1,7 +1,7 @@
 {
     "name": "newpost",
-    "version": "0.0.1",
-    "description": "Make a blog post MD file for GitHub Pages.",
+    "version": "0.0.2",
+    "description": "Make GitHub Pages/Jekyll blog posts, faster",
     "main": "index.js",
     "author": "jve",
     "license": "MIT",
