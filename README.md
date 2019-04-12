@@ -1,4 +1,4 @@
-# `newpost`: make GitHub Pages and Jekyll blog posts, faster.
+# `newpost`: make GitHub Pages/Jekyll blog posts, faster.
 
 A little utility that creates a blog post file quickly, without copying and pasting front matter. Hate trying to remember what kind of front matter to put in your posts? Can't remember what ISO 8601 date format is to save your life? Me too! Install `newpost` and make your blogging life even easier than it already is with GitHub Pages and Jekyll.
 
