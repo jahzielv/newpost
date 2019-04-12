@@ -1,11 +1,12 @@
 const fs = require("fs");
 const fsPromises = require("fs").promises;
+const rootPath = require("app-root-path");
 
 function checkPostsDir() {
     try {
-        fs.statSync("./_posts");
+        fs.statSync(rootPath + "/_posts");
     } catch (err) {
-        fs.mkdirSync("./_posts");
+        fs.mkdirSync(rootPath + "/_posts");
     }
 }
 
