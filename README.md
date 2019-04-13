@@ -43,3 +43,9 @@ To override this with a custom value for `title`, simply use the `-t` or `--titl
 ```shell
 newpost myBlogPost -t myCustomTitleValue
 ```
+
+## Roadmap
+
+-   Testing
+-   Fancier looking CLI with chalk!
+-   Override/add any front matter value with flags
