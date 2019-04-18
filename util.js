@@ -62,7 +62,15 @@ async function addFrontMatter(matterArr) {
     }
 }
 
+function clean() {
+    let pkgJson = require(rootPath + "/package.json");
+    delete pkgJson.newpost;
+    console.log(pkgJson);
+    fsPromises.writeFile(rootPath + "/package.json", JSON.stringify(pkgJson));
+}
+
 module.exports = {
     createPost: createPost,
-    addFrontMatter: addFrontMatter
+    addFrontMatter: addFrontMatter,
+    clean: clean
 };

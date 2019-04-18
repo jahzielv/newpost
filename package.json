@@ -26,6 +26,6 @@
     "jekyll"
   ],
   "scripts": {
-    "clean": "node clean.js && prettier --write package.json"
+    "clean": "newpost clean && prettier --write package.json"
   }
 }

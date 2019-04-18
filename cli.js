@@ -1,6 +1,6 @@
 #!/usr/bin/env node --no-warnings
 let yargs = require("yargs");
-const { addFrontMatter, createPost } = require("./util");
+const { addFrontMatter, createPost, clean } = require("./util");
 const readlineSync = require("readline-sync");
 
 let argv = yargs
@@ -48,4 +48,7 @@ if (argv._.includes("init")) {
     } catch (err) {
         console.log(err.message);
     }
+}
+if (argv._.includes("clean")) {
+    clean();
 }
