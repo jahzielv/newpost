@@ -27,7 +27,7 @@ function getDate() {
     return year + "-" + month + "-" + day + "-";
 }
 
-function createPost(title, fmTitle) {
+async function createPost(title, fmTitle) {
     checkPostsDir();
     let configObj = JSON.parse(fs.readFileSync("package.json", "utf8")).newpost;
     if (!configObj) {
@@ -39,9 +39,10 @@ function createPost(title, fmTitle) {
 
     frontMatter.title = fmTitle;
     let frontMatterStr = createFMString(frontMatter);
-    fs.writeFile("./_posts/" + getDate() + title + ".md", frontMatterStr, err => {
-        if (err) throw err;
-    });
+    return fsPromises.writeFile(
+        "./_posts/" + getDate() + title + ".md",
+        frontMatterStr
+    );
 }
 
 async function addFrontMatter(matterArr) {
