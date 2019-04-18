@@ -28,5 +28,8 @@
   "scripts": {
     "clean": "newpost clean && prettier --write package.json",
     "test": "yarn clean && mocha && yarn clean"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.3"
   }
 }
