@@ -1,31 +1,37 @@
 {
-  "name": "newpost",
-  "version": "0.0.2",
-  "description": "Make GitHub Pages/Jekyll blog posts, faster",
-  "main": "index.js",
-  "author": "jve",
-  "license": "MIT",
-  "dependencies": {
-    "app-root-path": "^2.2.1",
-    "chalk": "^2.4.2",
-    "prompt": "^1.0.0",
-    "readline-sync": "^1.4.9",
-    "terminal-link": "^1.2.0",
-    "yargs": "^13.2.2"
-  },
-  "bin": {
-    "newpost": "./cli.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "github.com/jahzielv/newpost"
-  },
-  "keywords": [
-    "github pages",
-    "blogging",
-    "jekyll"
-  ],
-  "scripts": {
-    "clean": "newpost clean && prettier --write package.json"
-  }
+    "name": "newpost",
+    "version": "0.0.2",
+    "description": "Make GitHub Pages/Jekyll blog posts, faster",
+    "main": "index.js",
+    "author": "jve",
+    "license": "MIT",
+    "dependencies": {
+        "app-root-path": "^2.2.1",
+        "chalk": "^2.4.2",
+        "js-yaml": "^3.13.1",
+        "prompt": "^1.0.0",
+        "readline-sync": "^1.4.9",
+        "terminal-link": "^1.2.0",
+        "yargs": "^13.2.2"
+    },
+    "bin": {
+        "newpost": "./cli.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "github.com/jahzielv/newpost"
+    },
+    "keywords": [
+        "github pages",
+        "blogging",
+        "jekyll"
+    ],
+    "scripts": {
+        "clean": "node clean.js && prettier --write package.json && rm -rf _posts",
+        "test": "yarn clean && mocha && yarn clean"
+    },
+    "devDependencies": {
+        "mocha": "^6.1.3",
+        "prettier": "^1.17.0"
+    }
 }
