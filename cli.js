@@ -2,6 +2,7 @@
 let yargs = require("yargs");
 const { addFrontMatter, createPost, clean, createPostCustomFM } = require("./util");
 const readlineSync = require("readline-sync");
+const isEmpty = require("lodash.isempty");
 
 let argv =
     // .example(
@@ -46,22 +47,14 @@ if (argv._.includes("init")) {
             customFM[fm] = argv[fm];
         }
     }
-    if (customFM !== undefined) {
-        try {
-            createPostCustomFM(customFM, argv._[0]);
-        } catch (err) {
-            console.log(err.message);
-        }
+    if (!isEmpty(customFM)) {
+        createPostCustomFM(customFM, argv._[0]).catch(err => console.log(err.message));
     } else {
-        try {
-            let postName = argv._[0];
-            if (argv.t) {
-                createPost(postName, argv.t);
-            } else {
-                createPost(postName, postName);
-            }
-        } catch (err) {
-            console.log(err.message);
+        let postName = argv._[0];
+        if (argv.t) {
+            createPost(postName, argv.t).catch(err => console.log(err.message));
+        } else {
+            createPost(postName, postName).catch(err => console.log(err.message));
         }
     }
 }
