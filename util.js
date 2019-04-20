@@ -40,7 +40,28 @@ async function createPost(title, fmTitle) {
     frontMatter.title = fmTitle;
     let frontMatterStr = createFMString(frontMatter);
     return fsPromises.writeFile(
-        "./_posts/" + getDate() + title + ".md",
+        rootPath + "/_posts/" + getDate() + title + ".md",
+        frontMatterStr
+    );
+}
+
+async function createPostCustomFM(customFM, title) {
+    checkPostsDir();
+    let configObj = JSON.parse(fs.readFileSync("package.json", "utf8")).newpost;
+    if (!configObj) {
+        throw new Error(
+            "No front matter found; run newpost init to add some front matter!"
+        );
+    }
+
+    let frontMatter = configObj.frontMatter;
+    frontMatter.title = title;
+    let combinedConfig = { ...frontMatter, ...customFM };
+
+    // frontMatter.title = fmTitle;
+    let frontMatterStr = createFMString(combinedConfig);
+    return fsPromises.writeFile(
+        rootPath + "/_posts/" + getDate() + title + ".md",
         frontMatterStr
     );
 }
@@ -72,6 +93,7 @@ function clean() {
 
 module.exports = {
     createPost: createPost,
+    createPostCustomFM: createPostCustomFM,
     addFrontMatter: addFrontMatter,
     clean: clean
 };
