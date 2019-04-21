@@ -46,6 +46,6 @@ newpost myBlogPost -t myCustomTitleValue
 
 ## Roadmap
 
--   Testing
--   Fancier looking CLI with chalk!
--   Override/add any front matter value with flags
+-   [x] Testing
+-   [] Fancier looking CLI with chalk!
+-   [x] Override/add any front matter value with flags
