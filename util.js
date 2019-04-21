@@ -29,7 +29,10 @@ function getDate() {
 
 async function createPost(title, fmTitle) {
     checkPostsDir();
-    let configObj = JSON.parse(fs.readFileSync("package.json", "utf8")).newpost;
+    let packageJson = JSON.parse(
+        await fsPromises.readFile(rootPath + "/package.json", "utf8")
+    );
+    let configObj = packageJson.newpost;
     if (!configObj) {
         throw new Error(
             "No front matter found; run newpost init to add some front matter!"
@@ -40,9 +43,41 @@ async function createPost(title, fmTitle) {
     frontMatter.title = fmTitle;
     let frontMatterStr = createFMString(frontMatter);
     return fsPromises.writeFile(
-        "./_posts/" + getDate() + title + ".md",
+        rootPath + "/_posts/" + getDate() + title + ".md",
         frontMatterStr
     );
+}
+
+async function createPostCustomFM(customFM, title) {
+    checkPostsDir();
+    try {
+        let packageJson = JSON.parse(
+            await fsPromises.readFile(rootPath + "/package.json", "utf8")
+        );
+
+        let configObj = packageJson.newpost;
+        if (!configObj) {
+            customFM = { ...customFM, ...{ title: title } };
+            let frontMatterStr = createFMString(customFM);
+            return fsPromises.writeFile(
+                rootPath + "/_posts/" + getDate() + title + ".md",
+                frontMatterStr
+            );
+        } else {
+            let frontMatter = configObj.frontMatter;
+            frontMatter.title = title;
+            let combinedConfig = { ...frontMatter, ...customFM };
+
+            // frontMatter.title = fmTitle;
+            let frontMatterStr = createFMString(combinedConfig);
+            return fsPromises.writeFile(
+                rootPath + "/_posts/" + getDate() + title + ".md",
+                frontMatterStr
+            );
+        }
+    } catch (err) {
+        throw err;
+    }
 }
 
 async function addFrontMatter(matterArr) {
@@ -72,6 +107,7 @@ function clean() {
 
 module.exports = {
     createPost: createPost,
+    createPostCustomFM: createPostCustomFM,
     addFrontMatter: addFrontMatter,
     clean: clean
 };
