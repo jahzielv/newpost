@@ -7,12 +7,15 @@
   "license": "MIT",
   "dependencies": {
     "app-root-path": "^2.2.1",
+    "ascii-art": "^1.5.1",
     "chalk": "^2.4.2",
+    "figlet": "^1.2.1",
     "js-yaml": "^3.13.1",
     "lodash.isempty": "^4.4.0",
     "prompt": "^1.0.0",
     "readline-sync": "^1.4.9",
     "terminal-link": "^1.2.0",
+    "yargonaut": "^1.1.4",
     "yargs": "^13.2.2"
   },
   "bin": {

@@ -4,29 +4,27 @@ const { addFrontMatter, createPost, clean, createPostCustomFM } = require("./uti
 const readlineSync = require("readline-sync");
 const isEmpty = require("lodash.isempty");
 
-let argv =
-    // .example(
-    // "$0 myNewPost -t myCustomTitle",
-    // "Create a new post with the title front matter member set to myCustomTitle."
-    /*).*/ yargs
-        .scriptName("newpost")
-        .usage(
-            "Create new blog posts for Jekyll/GitHub Pages sites quickly and easily!"
-        )
-        .usage("$0 [postname] [commands]")
-        .command("init", "Create a new front matter configuration")
-        .command(
-            "[postname]",
-            "Creates a new post with front matter specified in your front matter config. title is set to [postname] by default."
-        )
-        .demandCommand(1)
-        // .alias("t", "title")
-        // .nargs("t", 1)
-        // .describe("t", "Pass a custom title for the post.")
-        .example(
-            "$0 my_new_post",
-            "Creates a new MD blog post called <currentDate>-my_new_post.md"
-        ).argv;
+require("yargonaut")
+    .style("blue")
+    .font("5 Line Oblique");
+
+let argv = yargs
+    .scriptName("newpost")
+    .usage("Create new blog posts for Jekyll/GitHub Pages sites quickly and easily!")
+    .usage("$0 [postname] [commands]")
+    .command("init", "Create a new front matter configuration")
+    .command(
+        "[postname]",
+        "Creates a new post with front matter specified in your front matter config. title is set to [postname] by default."
+    )
+    .demandCommand(1)
+    // .alias("t", "title")
+    // .nargs("t", 1)
+    // .describe("t", "Pass a custom title for the post.")
+    .example(
+        "$0 my_new_post",
+        "Creates a new MD blog post called <currentDate>-my_new_post.md"
+    ).argv;
 
 if (argv._.includes("init")) {
     console.log("Enter some front matter in this format: '<property>:<value>'");
