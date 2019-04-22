@@ -7,18 +7,19 @@ let yargs = require("yargs");
 const { addFrontMatter, createPost, clean, createPostCustomFM } = require("./util");
 const readlineSync = require("readline-sync");
 const isEmpty = require("lodash.isempty");
-console.log(
-    ygn.chalk().bold.magenta(ygn.figlet().textSync("newpost\n", { font: "script" }))
-);
-console.log(
-    ygn
-        .chalk()
-        .bold.yellow(
-            "Create new blog posts for Jekyll/GitHub Pages sites quickly and easily!"
-        )
-);
+
 let argv = yargs
     .scriptName("newpost")
+    .usage(
+        ygn.chalk().bold.magenta(ygn.figlet().textSync("newpost\n", { font: "script" }))
+    )
+    .usage(
+        ygn
+            .chalk()
+            .bold.yellow(
+                "Create new blog posts for Jekyll/GitHub Pages sites quickly and easily!"
+            )
+    )
     .usage("Usage: $0 [postname] [commands]")
     .command("init", "Create a new front matter configuration in package.json.")
     .command(
@@ -29,6 +30,7 @@ let argv = yargs
         "[postname] [front matter args]",
         "Create a new post Creates a new post called 'today-in-iso8601.[postname].md', with the front matter specified in the args as well as any specified in your front matter config. Arg values take precedence over config values."
     )
+    .command("clean", "removes ")
     .example(
         "$0 my_new_post",
         "Creates a new MD blog post called <currentDate>-my_new_post.md"
