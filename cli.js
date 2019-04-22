@@ -1,32 +1,45 @@
 #!/usr/bin/env node --no-warnings
+const ygn = require("yargonaut")
+    .helpStyle("black.underline.bgCyan")
+    .errors("Digital")
+    .errorsStyle("red");
 let yargs = require("yargs");
 const { addFrontMatter, createPost, clean, createPostCustomFM } = require("./util");
 const readlineSync = require("readline-sync");
 const isEmpty = require("lodash.isempty");
 
-let argv =
-    // .example(
-    // "$0 myNewPost -t myCustomTitle",
-    // "Create a new post with the title front matter member set to myCustomTitle."
-    /*).*/ yargs
-        .scriptName("newpost")
-        .usage(
-            "Create new blog posts for Jekyll/GitHub Pages sites quickly and easily!"
-        )
-        .usage("$0 [postname] [commands]")
-        .command("init", "Create a new front matter configuration")
-        .command(
-            "[postname]",
-            "Creates a new post with front matter specified in your front matter config. title is set to [postname] by default."
-        )
-        .demandCommand(1)
-        // .alias("t", "title")
-        // .nargs("t", 1)
-        // .describe("t", "Pass a custom title for the post.")
-        .example(
-            "$0 my_new_post",
-            "Creates a new MD blog post called <currentDate>-my_new_post.md"
-        ).argv;
+let argv = yargs
+    .scriptName("newpost")
+    .usage(
+        ygn.chalk().bold.magenta(ygn.figlet().textSync("newpost\n", { font: "script" }))
+    )
+    .usage(
+        ygn
+            .chalk()
+            .bold.yellow(
+                "Create new blog posts for Jekyll/GitHub Pages sites quickly and easily!"
+            )
+    )
+    .usage("Usage: $0 [postname] [commands]")
+    .command("init", "Create a new front matter configuration in package.json.")
+    .command(
+        "[postname]",
+        "Creates a new post called 'today-in-iso8601.[postname].md', with the front matter specified in your front matter config. The front matter title property is set to [postname] by default."
+    )
+    .command(
+        "[postname] [front matter args]",
+        "Create a new post Creates a new post called 'today-in-iso8601.[postname].md', with the front matter specified in the args as well as any specified in your front matter config. Arg values take precedence over config values."
+    )
+    .command("clean", "removes ")
+    .example(
+        "$0 my_new_post",
+        "Creates a new MD blog post called <currentDate>-my_new_post.md"
+    )
+    .example(
+        '$0 my_new_post --title "This is my post!" --myProp myVal',
+        "Creates a new MD blog post called <currentDate>-my_new_post.md with front matter specified, plus any values in config."
+    )
+    .demandCommand(1).argv;
 
 if (argv._.includes("init")) {
     console.log("Enter some front matter in this format: '<property>:<value>'");
