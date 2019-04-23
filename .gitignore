@@ -3,3 +3,4 @@ _posts/
 fm.json
 .vscode/
 .nyc*/
+coverage/
