@@ -1,6 +1,7 @@
 ---
 layout: default
 permalink: /home
+---
 
 # `newpost`: make GitHub Pages/Jekyll blog posts, faster.
 
