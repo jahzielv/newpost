@@ -1,7 +1,8 @@
 # `newpost`: make GitHub Pages/Jekyll blog posts, faster.
 
-[![Build Status](https://travis-ci.com/jahzielv/newpost.svg?branch=master)](https://travis-ci.com/jahzielv/newpost)
+[![Build Status](https://travis-ci.com/jahzielv/newpost.svg?branch=master)](https://travis-ci.com/jahzielv/newpost.svg?branch=master)
 [![npm version](https://badgen.net/npm/v/newpost)](https://www.npmjs.com/package/newpost)
+![Prettier Badge](https://badgen.net/badge/code%20style/prettier/5AB3B3)
 
 A little utility that creates a blog post file quickly, without copying and pasting front matter. Hate trying to remember what kind of front matter to put in your posts? Can't remember what ISO 8601 date format is to save your life? Me too! Install `newpost` and make your blogging life even easier than it already is with GitHub Pages and Jekyll.
 
@@ -37,7 +38,17 @@ Then start adding your metadata. Use this format `<property>:<value>` when addin
 
 ### Start blogging 🎉📝
 
-You're all set up! If you set up a config object, you can run `newpost myNewPostName` to create a new blog entry with your default front matter. `title` is set to `myNewPostName` by default. To override that or any config-defined property, just pass it in as an arg:
+You're all set up! If you set up a config object, you can run `newpost myNewPostName` to create a new blog entry with your default front matter. `title` is set to `myNewPostName` by default. The output looks like this:
+
+```yaml
+---
+title: myNewPostName
+# everything else defined in your config object goes here...
+---
+
+```
+
+To override that or any config-defined property, just pass it in as an arg:
 
 ```bash
 newpost myNewPostName --title MyTitle --author Jahziel --coolProp awesome
@@ -46,10 +57,13 @@ newpost myNewPostName --title MyTitle --author Jahziel --coolProp awesome
 This will create a new blog post file called `<current ISO 8601 date>.myNewPostName.md`, with the following contents:
 
 ```yaml
+---
 title: myTitle
 author: Jahziel
 coolProp: awesome
 # everything else defined in your config object goes here...
+---
+
 ```
 
 Make sure you pass in values with spaces in quotes!
@@ -61,8 +75,11 @@ newpost myNewPost --title "My really long blog post title" --author Jahziel --co
 will give you:
 
 ```yaml
+---
 title: My really long blog post title
 author: Jahziel
 coolProp: awesome
 # everything else defined in your config object goes here...
+---
+
 ```
