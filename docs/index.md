@@ -1,3 +1,7 @@
+---
+layout: default
+permalink: /home
+
 # `newpost`: make GitHub Pages/Jekyll blog posts, faster.
 
 [![Build Status](https://travis-ci.com/jahzielv/newpost.svg?branch=master)](https://travis-ci.com/jahzielv/newpost.svg?branch=master)
