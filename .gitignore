@@ -2,3 +2,4 @@ node_modules/
 _posts/
 fm.json
 .vscode/
+.nyc*/
