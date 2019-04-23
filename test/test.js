@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { addFrontMatter, createPost, clean } = require("../util");
+const { addFrontMatter, createPost, clean, createPostCustomFM } = require("../util");
 const yaml = require("js-yaml");
 const fs = require("fs");
 const path = require("path");
@@ -37,16 +37,41 @@ describe("addFrontMatter", () => {
 
 describe("createPost", () => {
     it("Should create a folder called _posts, with the correct post inside.", async () => {
-        let editProm = await addFrontMatter(["a:b", "c:d", "e:f", "title:test"]);
-        // let editedPJ = require("../package.json");
-        await createPost("test", "test");
+        let editProm = await addFrontMatter(["a:b", "c:d", "e:f"]);
+        await createPost("createPostTest", "createPostTest");
         let postData = fs.readFileSync(
-            path.resolve(__dirname, "../_posts/" + getDate() + "test.md"),
+            path.resolve(__dirname, "../_posts/" + getDate() + "createPostTest.md"),
             "utf-8"
         );
         console.log(postData);
         let output = yaml.safeLoadAll(postData); // returns an array because we have mulitple documents
 
-        assert.deepStrictEqual(output[0], { a: "b", c: "d", e: "f", title: "test" });
+        assert.deepStrictEqual(output[0], {
+            a: "b",
+            c: "d",
+            e: "f",
+            title: "createPostTest"
+        });
+    });
+});
+
+describe("createPostCustomFM", () => {
+    it("Should create a folder called _posts, with the correct post and front matter inside.", async () => {
+        // First case: we have no front matter configured
+        let ogTitle = "myPost";
+        let customFM = { a: "b", c: "d", e: "f", title: "createPostCustomFMTest" };
+        await createPostCustomFM(customFM, ogTitle);
+        let postData = fs.readFileSync(
+            path.resolve(__dirname, "../_posts/" + getDate() + "myPost.md"),
+            "utf-8"
+        );
+        console.log(postData);
+        let output = yaml.safeLoadAll(postData);
+        assert.deepStrictEqual(output[0], {
+            a: "b",
+            c: "d",
+            e: "f",
+            title: "createPostCustomFMTest"
+        });
     });
 });

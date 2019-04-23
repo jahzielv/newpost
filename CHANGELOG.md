@@ -2,6 +2,10 @@
 
 We're following this [convention](https://keepachangelog.com/en/1.0.0/) for changelogs, as well as SemVer.
 
+## 1.0.0 -2019-04-23
+
+WOAH THERE... Why the big jump? So it turns out that it's a good idea to start your projects at 1.0.0 when publishing, but I kinda forgot to do that 😅 So we're going to pretend that no one saw the past couple of versions!
+
 ## 0.1.0 - 2019-04-22
 
 ### Changed:

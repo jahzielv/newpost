@@ -57,7 +57,7 @@ async function createPostCustomFM(customFM, title) {
 
         let configObj = packageJson.newpost;
         if (!configObj) {
-            customFM = { ...customFM, ...{ title: title } };
+            customFM = { ...{ title: title }, ...customFM };
             let frontMatterStr = createFMString(customFM);
             return fsPromises.writeFile(
                 rootPath + "/_posts/" + getDate() + title + ".md",
