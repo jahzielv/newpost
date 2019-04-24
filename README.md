@@ -84,3 +84,35 @@ coolProp: awesome
 ---
 
 ```
+
+## Dev stuff 👨‍💻👩‍💻
+
+### Getting started
+
+Clone this repo! Then
+
+```bash
+yarn install
+```
+
+or
+
+```bash
+npm install
+```
+
+### Testing
+
+There are test! You can run them! Just run
+
+```bash
+yarn test
+```
+
+or
+
+```bash
+npm test
+```
+
+You can open up `/coverage/index.html` to get a detailed coverage report.
