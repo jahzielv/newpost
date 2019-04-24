@@ -103,7 +103,7 @@ npm install
 
 ### Testing
 
-There are test! You can run them! Just run
+There are tests! You can run them! Just run
 
 ```bash
 yarn test
