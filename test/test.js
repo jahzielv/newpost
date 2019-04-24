@@ -3,6 +3,7 @@ const { addFrontMatter, createPost, clean, createPostCustomFM } = require("../ut
 const yaml = require("js-yaml");
 const fs = require("fs");
 const path = require("path");
+const rootPath = require("app-root-path");
 
 let pJ;
 
@@ -16,11 +17,11 @@ function getDate() {
 
 function removePckgJson() {
     pJ = JSON.parse(fs.readFileSync(rootPath + "/package.json", "utf8"));
-    fs.unlinkSync("../package.json");
+    fs.unlinkSync(rootPath + "/package.json");
 }
 
 function restorePj() {
-    fs.writeFileSync("../package.json", JSON.stringify(pJ));
+    fs.writeFileSync(rootPath + "/package.json", JSON.stringify(pJ));
 }
 
 /**
@@ -30,7 +31,7 @@ describe("addFrontMatter", () => {
     it("should edit package.json correctly", async () => {
         let fmArr = ["a:b", "c:d", "e:f"];
         await addFrontMatter(fmArr);
-        let editedPJ = require("../package.json");
+        let editedPJ = require(rootPath + "/package.json");
         assert.deepStrictEqual(editedPJ.newpost, {
             frontMatter: {
                 a: "b",
@@ -40,7 +41,7 @@ describe("addFrontMatter", () => {
             }
         });
     });
-    after(() => clean());
+    after(async () => await clean());
 });
 
 /**
@@ -49,10 +50,13 @@ describe("addFrontMatter", () => {
 
 describe("createPost", () => {
     it("Should create a folder called _posts, with the correct post inside.", async () => {
-        let editProm = await addFrontMatter(["a:b", "c:d", "e:f"]);
+        await addFrontMatter(["a:b", "c:d", "e:f"]);
         await createPost("createPostTest", "createPostTest");
         let postData = fs.readFileSync(
-            path.resolve(__dirname, "../_posts/" + getDate() + "createPostTest.md"),
+            path.resolve(
+                __dirname,
+                rootPath + "/_posts/" + getDate() + "createPostTest.md"
+            ),
             "utf-8"
         );
         let output = yaml.safeLoadAll(postData); // returns an array because we have mulitple documents
@@ -64,7 +68,7 @@ describe("createPost", () => {
             title: "createPostTest"
         });
     });
-    after(() => clean());
+    after(async () => await clean());
 });
 
 describe("createPost - error case", () => {
@@ -76,7 +80,7 @@ describe("createPost - error case", () => {
             )
         );
     });
-    after(() => clean());
+    after(async () => await clean());
 });
 
 describe("createPostCustom", () => {
@@ -87,7 +91,10 @@ describe("createPostCustom", () => {
             let customFM = { a: "b", c: "d", e: "f", title: "createPostCustomFMTest" };
             await createPostCustomFM(customFM, ogTitle);
             let postData = fs.readFileSync(
-                path.resolve(__dirname, "../_posts/" + getDate() + "myPost.md"),
+                path.resolve(
+                    __dirname,
+                    rootPath + "/_posts/" + getDate() + "myPost.md"
+                ),
                 "utf-8"
             );
             let output = yaml.safeLoadAll(postData);
@@ -107,7 +114,10 @@ describe("createPostCustom", () => {
             let ogTitle = "myPost";
             await createPostCustomFM(customFM, ogTitle);
             let postData = fs.readFileSync(
-                path.resolve(__dirname, "../_posts/" + getDate() + "myPost.md"),
+                path.resolve(
+                    __dirname,
+                    rootPath + "/_posts/" + getDate() + "myPost.md"
+                ),
                 "utf-8"
             );
             let output = yaml.safeLoadAll(postData);
@@ -122,7 +132,6 @@ describe("createPostCustom", () => {
 
     describe("createPostCustomFM - Case 3", () => {
         it("Should create a folder called _posts, with the correct post and front matter inside. Combination of config and flags.", async () => {
-            // Second case: no config, --title flag unused
             const CHANGED_VALUE = "DIFFERENT";
             await addFrontMatter(["a:b", "c:d", "e:f"]);
             let customFM = {
@@ -134,7 +143,10 @@ describe("createPostCustom", () => {
             let ogTitle = "myPost";
             await createPostCustomFM(customFM, ogTitle);
             let postData = fs.readFileSync(
-                path.resolve(__dirname, "../_posts/" + getDate() + "myPost.md"),
+                path.resolve(
+                    __dirname,
+                    rootPath + "/_posts/" + getDate() + "myPost.md"
+                ),
                 "utf-8"
             );
             let output = yaml.safeLoadAll(postData);
@@ -146,14 +158,45 @@ describe("createPostCustom", () => {
             });
         });
     });
-    afterEach(() => clean());
+    afterEach(async () => await clean());
 });
 
 describe("clean", () => {
     it("Should remove all newpost config data from package.json", async () => {
         await addFrontMatter(["a:b", "f:g", "x:y"]);
-        clean();
-        let packageJson = require("../package.json");
+        await clean();
+        let packageJson = JSON.parse(fs.readFileSync(rootPath + "/package.json"));
         assert.deepStrictEqual(packageJson.newpost, undefined);
     });
+});
+
+describe("IO Errors", () => {
+    before(removePckgJson);
+    it("Testing IO failure handling...", () => {
+        describe("createPostCustomFM - IO Failures", async () => {
+            assert.rejects(async () => createPostCustomFM({ a: "b" }, "test"), {
+                name: "Error",
+                code: "ENOENT"
+            });
+        });
+        describe("createPost - IO Failures", async () => {
+            assert.rejects(async () => createPost("test", "test"), {
+                name: "Error",
+                code: "ENOENT"
+            });
+        });
+        describe("addFrontMatter - IO Failures", async () => {
+            assert.rejects(async () => addFrontMatter(["a:b", "c:d"]), {
+                name: "Error",
+                code: "ENOENT"
+            });
+        });
+        describe("clean - IO Failures", () => {
+            assert.rejects(clean(), {
+                name: "Error",
+                code: "ENOENT"
+            });
+        });
+    });
+    after(restorePj);
 });

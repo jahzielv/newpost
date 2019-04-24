@@ -109,7 +109,7 @@ async function createPostCustomFM(customFM, title) {
 
 /**
  * Writes some given front matter to package.json.
- * @param {array} matterArr An array of strings, where each string contains a key:value front matter pair
+ * @param {Array<String>} matterArr An array of strings, where each string contains a key:value front matter pair
  * @returns A `Promise` for the writing of the front matter to package.json.
  */
 async function addFrontMatter(matterArr) {
@@ -121,10 +121,13 @@ async function addFrontMatter(matterArr) {
     fmObj.title = "";
     try {
         let packageJson = await fsPromises
-            .readFile("./package.json", "utf8")
+            .readFile(rootPath + "/package.json", "utf8")
             .then(data => JSON.parse(data));
         packageJson.newpost = { frontMatter: fmObj };
-        return fsPromises.writeFile("./package.json", JSON.stringify(packageJson));
+        return fsPromises.writeFile(
+            rootPath + "/package.json",
+            JSON.stringify(packageJson)
+        );
     } catch (err) {
         throw err;
     }
@@ -132,12 +135,16 @@ async function addFrontMatter(matterArr) {
 
 /**
  * Removes `newpost`'s config object from package.json.
+ * @returns a `Promise` for the writing of the cleaned package.json
  */
-function clean() {
+async function clean() {
     try {
-        let pkgJson = require(rootPath + "/package.json");
+        let pkgJson = JSON.parse(await fsPromises.readFile(rootPath + "/package.json"));
         delete pkgJson.newpost;
-        fsPromises.writeFile(rootPath + "/package.json", JSON.stringify(pkgJson));
+        return fsPromises.writeFile(
+            rootPath + "/package.json",
+            JSON.stringify(pkgJson)
+        );
     } catch (err) {
         throw err;
     }

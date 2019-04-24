@@ -4,3 +4,4 @@ fm.json
 .vscode/
 .nyc*/
 coverage/
+*.log
