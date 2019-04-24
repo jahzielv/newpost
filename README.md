@@ -85,9 +85,15 @@ coolProp: awesome
 
 ```
 
+### Other commands 🖍
+
+-   `--help` shows a help message with a quick breakdown of what `newpost` does!
+-   `--version` shows the currently installed version
+-   `clean` removes any config data that has been written to package.json
+
 ## Dev stuff 👨‍💻👩‍💻
 
-### Getting started
+### Getting started 🛫
 
 Clone this repo! Then
 
@@ -101,7 +107,7 @@ or
 npm install
 ```
 
-### Testing
+### Testing 🧪
 
 There are tests! You can run them! Just run
 
