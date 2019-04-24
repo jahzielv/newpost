@@ -79,7 +79,10 @@ async function createPostCustomFM(customFM, title) {
         throw err;
     }
 }
-
+/**
+ * Writes some given front matter to package.json.
+ * @param {array} matterArr An array of strings, where each string contains a key:value front matter pair
+ */
 async function addFrontMatter(matterArr) {
     let fmObj = {};
     matterArr.forEach(element => {

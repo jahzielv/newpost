@@ -33,8 +33,7 @@
   ],
   "scripts": {
     "clean": "node clean.js && prettier --write package.json && rm -rf _posts",
-    "test": "yarn clean && nyc mocha && yarn clean",
-    "testout": "yarn clean && nyc --reporter=text --reporter=html mocha && yarn clean",
+    "test": "yarn clean && nyc --reporter=text --reporter=html mocha && yarn clean",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "devDependencies": {
