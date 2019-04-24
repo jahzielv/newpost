@@ -72,5 +72,9 @@ if (argv._.includes("init")) {
     }
 }
 if (argv._.includes("clean")) {
-    clean();
+    try {
+        clean();
+    } catch (err) {
+        console.log(err.message);
+    }
 }

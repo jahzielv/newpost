@@ -4,12 +4,23 @@ const yaml = require("js-yaml");
 const fs = require("fs");
 const path = require("path");
 
+let pJ;
+
 function getDate() {
     let dateObj = new Date();
     let year = dateObj.getUTCFullYear().toString();
     let month = (dateObj.getUTCMonth() + 1).toString();
     let day = dateObj.getUTCDate().toString();
     return year + "-" + month + "-" + day + "-";
+}
+
+function removePckgJson() {
+    pJ = JSON.parse(fs.readFileSync(rootPath + "/package.json", "utf8"));
+    fs.unlinkSync("../package.json");
+}
+
+function restorePj() {
+    fs.writeFileSync("../package.json", JSON.stringify(pJ));
 }
 
 /**
