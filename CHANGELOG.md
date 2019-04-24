@@ -2,9 +2,19 @@
 
 We're following this [convention](https://keepachangelog.com/en/1.0.0/) for changelogs, as well as SemVer.
 
-## 1.0.0 -2019-04-23
+## 1.0.0 - 2019-04-23
 
-WOAH THERE... Why the big jump? So it turns out that it's a good idea to start your projects at 1.0.0 when publishing, but I kinda forgot to do that 😅 So we're going to pretend that no one saw the past couple of versions!
+WOAH THERE... Why the big jump? So it turns out that it's a good idea to start your projects at 1.0.0 when publishing, but I kinda forgot to do that 😅 So we're going to pretend that no one saw the past couple of versions! Lots has been added to make this a proper package; enjoy!
+
+### Added
+
+-   Testing! Run `yarn test` or `npm test` to run the Mocha tests, plus get a code coverage report!
+-   Code coverage! I'm using Istanbul and Coveralls to get coverage reports.
+-   The `clean` command! This command removes all the front matter config from your package.json.
+
+### Removed
+
+-   The `-t` flag. Use `--title` instead, in addition to any other front matter properties you want!
 
 ## 0.1.0 - 2019-04-22
 
