@@ -53,6 +53,8 @@ if (argv._.includes("init")) {
     addFrontMatter(matterArr)
         .then(() => console.log("Config created!"))
         .catch(err => console.log("Error in creating newpost config: ", err));
+} else if (argv._.includes("clean")) {
+    clean().catch(err => console.log(err.message));
 } else {
     let customFM = {};
     for (let fm in argv) {
@@ -70,7 +72,4 @@ if (argv._.includes("init")) {
             createPost(postName, postName).catch(err => console.log(err.message));
         }
     }
-}
-if (argv._.includes("clean")) {
-    clean().catch(err => console.log(err.message));
 }
