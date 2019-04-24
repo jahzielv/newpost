@@ -60,7 +60,9 @@ describe("createPost - error case", () => {
     it("Should create a folder called _posts, with the correct post inside.", async () => {
         assert.rejects(
             () => createPost("test", "test"),
-            "No front matter found; run newpost init to add some front matter!"
+            new Error(
+                "No front matter found; run newpost init to add some front matter!"
+            )
         );
     });
     after(() => clean());
