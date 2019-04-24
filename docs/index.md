@@ -1,12 +1,9 @@
----
-layout: default
----
-
 # `newpost`: make GitHub Pages/Jekyll blog posts, faster.
 
 [![Build Status](https://travis-ci.com/jahzielv/newpost.svg?branch=master)](https://travis-ci.com/jahzielv/newpost.svg?branch=master)
 [![npm version](https://badgen.net/npm/v/newpost)](https://www.npmjs.com/package/newpost)
 ![Prettier Badge](https://badgen.net/badge/code%20style/prettier/5AB3B3)
+[![Coverage Status](https://coveralls.io/repos/github/jahzielv/newpost/badge.svg?branch=master)](https://coveralls.io/github/jahzielv/newpost?branch=master)
 
 A little utility that creates a blog post file quickly, without copying and pasting front matter. Hate trying to remember what kind of front matter to put in your posts? Can't remember what ISO 8601 date format is to save your life? Me too! Install `newpost` and make your blogging life even easier than it already is with GitHub Pages and Jekyll.
 
@@ -87,3 +84,41 @@ coolProp: awesome
 ---
 
 ```
+
+### Other commands 🖍
+
+-   `--help` shows a help message with a quick breakdown of what `newpost` does!
+-   `--version` shows the currently installed version
+-   `clean` removes any config data that has been written to package.json
+
+## Dev stuff 👨‍💻👩‍💻
+
+### Getting started 🛫
+
+Clone this repo! Then
+
+```bash
+yarn install
+```
+
+or
+
+```bash
+npm install
+```
+
+### Testing 🧪
+
+There are tests! You can run them! Just run
+
+```bash
+yarn test
+```
+
+or
+
+```bash
+npm test
+```
+
+You can open up `/coverage/index.html` to get a detailed coverage report.

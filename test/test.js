@@ -1,8 +1,11 @@
 const assert = require("assert");
-const { addFrontMatter, createPost, clean } = require("../util");
+const { addFrontMatter, createPost, clean, createPostCustomFM } = require("../util");
 const yaml = require("js-yaml");
 const fs = require("fs");
 const path = require("path");
+const rootPath = require("app-root-path");
+
+let pJ;
 
 function getDate() {
     let dateObj = new Date();
@@ -12,14 +15,23 @@ function getDate() {
     return year + "-" + month + "-" + day + "-";
 }
 
+function removePckgJson() {
+    pJ = JSON.parse(fs.readFileSync(rootPath + "/package.json", "utf8"));
+    fs.unlinkSync(rootPath + "/package.json");
+}
+
+function restorePj() {
+    fs.writeFileSync(rootPath + "/package.json", JSON.stringify(pJ));
+}
+
 /**
  * Test the addFrontMatter function from util.
  */
 describe("addFrontMatter", () => {
     it("should edit package.json correctly", async () => {
         let fmArr = ["a:b", "c:d", "e:f"];
-        let editProm = await addFrontMatter(fmArr);
-        let editedPJ = require("../package.json");
+        await addFrontMatter(fmArr);
+        let editedPJ = require(rootPath + "/package.json");
         assert.deepStrictEqual(editedPJ.newpost, {
             frontMatter: {
                 a: "b",
@@ -29,6 +41,7 @@ describe("addFrontMatter", () => {
             }
         });
     });
+    after(async () => await clean());
 });
 
 /**
@@ -37,16 +50,153 @@ describe("addFrontMatter", () => {
 
 describe("createPost", () => {
     it("Should create a folder called _posts, with the correct post inside.", async () => {
-        let editProm = await addFrontMatter(["a:b", "c:d", "e:f", "title:test"]);
-        // let editedPJ = require("../package.json");
-        await createPost("test", "test");
+        await addFrontMatter(["a:b", "c:d", "e:f"]);
+        await createPost("createPostTest", "createPostTest");
         let postData = fs.readFileSync(
-            path.resolve(__dirname, "../_posts/" + getDate() + "test.md"),
+            path.resolve(
+                __dirname,
+                rootPath + "/_posts/" + getDate() + "createPostTest.md"
+            ),
             "utf-8"
         );
-        console.log(postData);
         let output = yaml.safeLoadAll(postData); // returns an array because we have mulitple documents
 
-        assert.deepStrictEqual(output[0], { a: "b", c: "d", e: "f", title: "test" });
+        assert.deepStrictEqual(output[0], {
+            a: "b",
+            c: "d",
+            e: "f",
+            title: "createPostTest"
+        });
     });
+    after(async () => await clean());
+});
+
+describe("createPost - error case", () => {
+    it("Should create a folder called _posts, with the correct post inside.", async () => {
+        assert.rejects(
+            () => createPost("test", "test"),
+            new Error(
+                "No front matter found; run newpost init to add some front matter!"
+            )
+        );
+    });
+    after(async () => await clean());
+});
+
+describe("createPostCustom", () => {
+    describe("createPostCustomFM - Case 1", () => {
+        it("Should create a folder called _posts, with the correct post and front matter inside. Passes in a title via --title flag.", async () => {
+            // First case: we have no front matter configured, --title flag used
+            let ogTitle = "myPost";
+            let customFM = { a: "b", c: "d", e: "f", title: "createPostCustomFMTest" };
+            await createPostCustomFM(customFM, ogTitle);
+            let postData = fs.readFileSync(
+                path.resolve(
+                    __dirname,
+                    rootPath + "/_posts/" + getDate() + "myPost.md"
+                ),
+                "utf-8"
+            );
+            let output = yaml.safeLoadAll(postData);
+            assert.deepStrictEqual(output[0], {
+                a: "b",
+                c: "d",
+                e: "f",
+                title: "createPostCustomFMTest"
+            });
+        });
+    });
+
+    describe("createPostCustomFM - Case 2", () => {
+        it("Should create a folder called _posts, with the correct post and front matter inside. Doesn't pass in title via --title flag.", async () => {
+            // Second case: no config, --title flag unused
+            let customFM = { a: "b", c: "d", e: "f" };
+            let ogTitle = "myPost";
+            await createPostCustomFM(customFM, ogTitle);
+            let postData = fs.readFileSync(
+                path.resolve(
+                    __dirname,
+                    rootPath + "/_posts/" + getDate() + "myPost.md"
+                ),
+                "utf-8"
+            );
+            let output = yaml.safeLoadAll(postData);
+            assert.deepStrictEqual(output[0], {
+                a: "b",
+                c: "d",
+                e: "f",
+                title: ogTitle
+            });
+        });
+    });
+
+    describe("createPostCustomFM - Case 3", () => {
+        it("Should create a folder called _posts, with the correct post and front matter inside. Combination of config and flags.", async () => {
+            const CHANGED_VALUE = "DIFFERENT";
+            await addFrontMatter(["a:b", "c:d", "e:f"]);
+            let customFM = {
+                a: CHANGED_VALUE,
+                c: "d",
+                e: CHANGED_VALUE,
+                title: "createPostCustomFM - Case 3"
+            };
+            let ogTitle = "myPost";
+            await createPostCustomFM(customFM, ogTitle);
+            let postData = fs.readFileSync(
+                path.resolve(
+                    __dirname,
+                    rootPath + "/_posts/" + getDate() + "myPost.md"
+                ),
+                "utf-8"
+            );
+            let output = yaml.safeLoadAll(postData);
+            assert.deepStrictEqual(output[0], {
+                a: CHANGED_VALUE,
+                c: "d",
+                e: CHANGED_VALUE,
+                title: "createPostCustomFM - Case 3"
+            });
+        });
+    });
+    afterEach(async () => await clean());
+});
+
+describe("clean", () => {
+    it("Should remove all newpost config data from package.json", async () => {
+        await addFrontMatter(["a:b", "f:g", "x:y"]);
+        await clean();
+        let packageJson = JSON.parse(fs.readFileSync(rootPath + "/package.json"));
+        assert.deepStrictEqual(packageJson.newpost, undefined);
+    });
+});
+
+describe("IO Errors", () => {
+    before(removePckgJson);
+    it("Testing IO failure handling...", () => {
+        describe("createPostCustomFM - IO Failures", async () => {
+            assert.rejects(async () => createPostCustomFM({ a: "b" }, "test"), {
+                name: "Error",
+                code: "ENOENT"
+            });
+        });
+        describe("createPost - IO Failures", async () => {
+            assert.rejects(async () => createPost("test", "test"), {
+                name: "Error",
+                code: "ENOENT"
+            });
+        });
+        describe("addFrontMatter - IO Failures", async () => {
+            assert.rejects(async () => addFrontMatter(["a:b", "c:d"]), {
+                name: "Error",
+                code: "ENOENT"
+            });
+        });
+        describe("clean - IO Failures", () => {
+            assert.rejects(clean(), {
+                name: "Error",
+                code: "ENOENT"
+            });
+        });
+    });
+    after(restorePj);
 });

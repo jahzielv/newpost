@@ -30,7 +30,10 @@ let argv = yargs
         "[postname] [front matter args]",
         "Create a new post Creates a new post called 'today-in-iso8601.[postname].md', with the front matter specified in the args as well as any specified in your front matter config. Arg values take precedence over config values."
     )
-    .command("clean", "removes ")
+    .command(
+        "clean",
+        "Removes all newpost front matter configuration data from package.json."
+    )
     .example(
         "$0 my_new_post",
         "Creates a new MD blog post called <currentDate>-my_new_post.md"
@@ -53,6 +56,8 @@ if (argv._.includes("init")) {
     addFrontMatter(matterArr)
         .then(() => console.log("Config created!"))
         .catch(err => console.log("Error in creating newpost config: ", err));
+} else if (argv._.includes("clean")) {
+    clean().catch(err => console.log(err.message));
 } else {
     let customFM = {};
     for (let fm in argv) {
@@ -70,7 +75,4 @@ if (argv._.includes("init")) {
             createPost(postName, postName).catch(err => console.log(err.message));
         }
     }
-}
-if (argv._.includes("clean")) {
-    clean();
 }
