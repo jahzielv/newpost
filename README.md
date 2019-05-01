@@ -85,10 +85,15 @@ coolProp: awesome
 
 ```
 
+#### `--draft`
+
+Adding the `--draft` flag to any of the above commands will create a draft file instead of a post file. This means that the file will be created in the `/_drafts` directory instead of the `/_posts` directory. Additionally, the file will be called `post_name.md` instead of `today-in-ISO8601-post_name.md`. Files in the `/drafts` folder are ignored by Jekyll/GitHub Pages, so you can commit them, but they won't be public. Once you're done crafting the Next Great Blog Entry™️, use the `undraft` command to move your draft to the big leagues (`/posts`)!
+
 ### Other commands 🖍
 
 -   `--help` shows a help message with a quick breakdown of what `newpost` does!
 -   `--version` shows the currently installed version
+-   `undraft post_name` moves the post with filename `post_name.md` to the `/_posts` directory. If you don't have a `/_posts`, it creates it for you.
 -   `clean` removes any config data that has been written to package.json
 
 ## Dev stuff 👨‍💻👩‍💻
