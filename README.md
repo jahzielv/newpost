@@ -5,7 +5,7 @@
 ![Prettier Badge](https://badgen.net/badge/code%20style/prettier/5AB3B3)
 [![Coverage Status](https://coveralls.io/repos/github/jahzielv/newpost/badge.svg?branch=master)](https://coveralls.io/github/jahzielv/newpost?branch=master)
 
-A little utility that creates a blog post file quickly, without copying and pasting front matter. Hate trying to remember what kind of front matter to put in your posts? Can't remember what ISO 8601 date format is to save your life? Me too! Install `newpost` and make your blogging life even easier than it already is with GitHub Pages and Jekyll.
+A little utility that creates a blog post file quickly, without copying and pasting front matter. Hate trying to remember what kind of front matter to put in your posts? Can't remember what ISO 8601 date format is to save your life? Install `newpost` and make managing your Jekyll/GitHub Pages blog posts easier than ever.
 
 ## How does it work? 👀
 

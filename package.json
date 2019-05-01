@@ -1,7 +1,7 @@
 {
     "name": "newpost",
     "version": "1.1.0",
-    "description": "Make GitHub Pages/Jekyll blog posts, faster",
+    "description": "Make and manage your GitHub Pages/Jekyll blog post files.",
     "main": "cli.js",
     "author": "jve",
     "license": "MIT",
