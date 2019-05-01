@@ -1,9 +1,18 @@
 const assert = require("assert");
-const { addFrontMatter, createPost, clean, createPostCustomFM } = require("../util");
+const {
+    addFrontMatter,
+    createPost,
+    clean,
+    createPostCustomFM,
+    undraft,
+    createDraft,
+    createDraftCustomFM
+} = require("../newpost");
 const yaml = require("js-yaml");
 const fs = require("fs");
 const path = require("path");
 const rootPath = require("app-root-path");
+const rimraf = require("rimraf");
 
 let pJ;
 
@@ -72,7 +81,7 @@ describe("createPost", () => {
 });
 
 describe("createPost - error case", () => {
-    it("Should create a folder called _posts, with the correct post inside.", async () => {
+    it("Should fail to create a post, since there is no front matter in config.", async () => {
         assert.rejects(
             () => createPost("test", "test"),
             new Error(
@@ -185,6 +194,18 @@ describe("IO Errors", () => {
                 code: "ENOENT"
             });
         });
+        describe("createDraftCustomFM - IO Failures", async () => {
+            assert.rejects(async () => createDraftCustomFM({ a: "b" }, "test"), {
+                name: "Error",
+                code: "ENOENT"
+            });
+        });
+        describe("createDraft - IO Failures", async () => {
+            assert.rejects(async () => createDraft("test", "test"), {
+                name: "Error",
+                code: "ENOENT"
+            });
+        });
         describe("addFrontMatter - IO Failures", async () => {
             assert.rejects(async () => addFrontMatter(["a:b", "c:d"]), {
                 name: "Error",
@@ -199,4 +220,153 @@ describe("IO Errors", () => {
         });
     });
     after(restorePj);
+});
+
+describe("Draft Functions", () => {
+    describe("createDraftCustom", () => {
+        describe("createDraftCustomFM - Case 1", () => {
+            it("Should create a folder called _drafts, with the correct draft and front matter inside. Passes in a title via --title flag.", async () => {
+                // First case: we have no front matter configured, --title flag used
+                let ogTitle = "myPost";
+                let customFM = {
+                    a: "b",
+                    c: "d",
+                    e: "f",
+                    title: "createDraftCustomFMTest"
+                };
+                await createDraftCustomFM(customFM, ogTitle);
+                let postData = fs.readFileSync(
+                    path.resolve(__dirname, `${rootPath}/_drafts/myPost.md`),
+                    "utf-8"
+                );
+                let output = yaml.safeLoadAll(postData);
+                assert.deepStrictEqual(output[0], {
+                    a: "b",
+                    c: "d",
+                    e: "f",
+                    title: "createDraftCustomFMTest"
+                });
+            });
+        });
+
+        describe("createDraftCustomFM - Case 2", () => {
+            it("Should create a folder called _drafts, with the correct draft and front matter inside. Doesn't pass in title via --title flag.", async () => {
+                // Second case: no config, --title flag unused
+                let customFM = { a: "b", c: "d", e: "f" };
+                let ogTitle = "myPost";
+                await createDraftCustomFM(customFM, ogTitle);
+                let postData = fs.readFileSync(
+                    path.resolve(__dirname, `${rootPath}/_drafts/myPost.md`),
+                    "utf-8"
+                );
+                let output = yaml.safeLoadAll(postData);
+                assert.deepStrictEqual(output[0], {
+                    a: "b",
+                    c: "d",
+                    e: "f",
+                    title: ogTitle
+                });
+            });
+        });
+
+        describe("createDraftCustomFM - Case 3", () => {
+            it("Should create a folder called _drafts, with the correct draft and front matter inside. Combination of config and flags.", async () => {
+                const CHANGED_VALUE = "DIFFERENT";
+                await addFrontMatter(["a:b", "c:d", "e:f"]);
+                let customFM = {
+                    a: CHANGED_VALUE,
+                    c: "d",
+                    e: CHANGED_VALUE,
+                    title: "createDraftCustomFM - Case 3"
+                };
+                let ogTitle = "myPost";
+                await createDraftCustomFM(customFM, ogTitle);
+                let postData = fs.readFileSync(
+                    path.resolve(__dirname, `${rootPath}/_drafts/myPost.md`),
+                    "utf-8"
+                );
+                let output = yaml.safeLoadAll(postData);
+                assert.deepStrictEqual(output[0], {
+                    a: CHANGED_VALUE,
+                    c: "d",
+                    e: CHANGED_VALUE,
+                    title: "createDraftCustomFM - Case 3"
+                });
+            });
+        });
+        afterEach(async () => await clean());
+    });
+    describe("createDraft", () => {
+        describe("createDraft - success case", () => {
+            it("Should create a folder called _drafts, with the correct post inside.", async () => {
+                await addFrontMatter(["a:b", "c:d", "e:f"]);
+                await createDraft("createPostTest", "createPostTest");
+                let postData = fs.readFileSync(
+                    path.resolve(__dirname, `${rootPath}/_drafts/createPostTest.md`),
+                    "utf-8"
+                );
+                let output = yaml.safeLoadAll(postData); // returns an array because we have mulitple documents
+
+                assert.deepStrictEqual(output[0], {
+                    a: "b",
+                    c: "d",
+                    e: "f",
+                    title: "createPostTest"
+                });
+            });
+            after(async () => await clean());
+        });
+
+        describe("createDraft - error case", () => {
+            it("Should fail to create a draft, since there is no front matter in config.", async () => {
+                assert.rejects(
+                    () => createDraft("test", "test"),
+                    new Error(
+                        "No front matter found; run newpost init to add some front matter!"
+                    )
+                );
+            });
+            after(async () => await clean());
+        });
+    });
+});
+
+describe("undraft", () => {
+    describe("undraft - no /_posts folder", () => {
+        it("Case where there is not a preexisting /_posts folder. Should move a draft to /_posts.", async () => {
+            await createDraftCustomFM({ a: "b", c: "d" }, "myBlog");
+            await undraft("myBlog");
+            let postData = fs.readFileSync(
+                path.resolve(__dirname, `${rootPath}/_posts/${getDate()}myBlog.md`),
+                "utf-8"
+            );
+            let output = yaml.safeLoadAll(postData); // returns an array because we have mulitple documents
+
+            assert.deepStrictEqual(output[0], {
+                a: "b",
+                c: "d",
+                title: "myBlog"
+            });
+        });
+        after(() => rimraf(`${rootPath}/_posts`, () => {}));
+    });
+    describe("undraft - yes /_posts folder", () => {
+        it("Case where there is a preexisting /_posts folder. Should move a draft to /_posts.", async () => {
+            await createDraftCustomFM({ a: "b", c: "d" }, "myBlog");
+            fs.mkdirSync(`${rootPath}/_posts`);
+            await undraft("myBlog");
+            let postData = fs.readFileSync(
+                path.resolve(__dirname, `${rootPath}/_posts/${getDate()}myBlog.md`),
+                "utf-8"
+            );
+            let output = yaml.safeLoadAll(postData); // returns an array because we have mulitple documents
+
+            assert.deepStrictEqual(output[0], {
+                a: "b",
+                c: "d",
+                title: "myBlog"
+            });
+        });
+        after(async () => await clean());
+    });
 });
