@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { addFrontMatter, createPost, clean, createPostCustomFM } = require("../util");
+const { addFrontMatter, createPost, clean, createPostCustomFM } = require("../newpost");
 const yaml = require("js-yaml");
 const fs = require("fs");
 const path = require("path");

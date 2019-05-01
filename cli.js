@@ -76,9 +76,7 @@ if (argv._.includes("init")) {
     if (!isEmpty(customFM)) {
         console.log(customFM);
         console.log("yeet");
-        createDraftCustomFM(customFM, argv._[0]).catch(err =>
-            console.log("the message: " + err.message)
-        );
+        createDraftCustomFM(customFM, argv._[0]).catch(err => console.log(err.message));
     } else {
         let postName = argv._[0];
         if (argv.t) {

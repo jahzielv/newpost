@@ -130,10 +130,7 @@ async function createDraft(title, fmTitle) {
 
     frontMatter.title = fmTitle;
     let frontMatterStr = createFMString(frontMatter);
-    return fsPromises.writeFile(
-        rootPath + "/_drafts/" + getDate() + title + ".md",
-        frontMatterStr
-    );
+    return fsPromises.writeFile(rootPath + "/_drafts/" + title + ".md", frontMatterStr);
 }
 
 async function createDraftCustomFM(customFM, title) {
@@ -148,7 +145,7 @@ async function createDraftCustomFM(customFM, title) {
             customFM = { ...{ title: title }, ...customFM };
             let frontMatterStr = createFMString(customFM);
             return fsPromises.writeFile(
-                rootPath + "/_drafts/" + getDate() + title + ".md",
+                rootPath + "/_drafts/" + title + ".md",
                 frontMatterStr
             );
         } else {
@@ -159,7 +156,7 @@ async function createDraftCustomFM(customFM, title) {
             // frontMatter.title = fmTitle;
             let frontMatterStr = createFMString(combinedConfig);
             return fsPromises.writeFile(
-                rootPath + "/_drafts/" + getDate() + title + ".md",
+                rootPath + "/_drafts/" + title + ".md",
                 frontMatterStr
             );
         }
