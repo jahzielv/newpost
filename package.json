@@ -14,6 +14,7 @@
         "lodash.isempty": "^4.4.0",
         "prompt": "^1.0.0",
         "readline-sync": "^1.4.9",
+        "rimraf": "^2.6.3",
         "terminal-link": "^1.2.0",
         "yargonaut": "^1.1.4",
         "yargs": "^13.2.2"
