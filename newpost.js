@@ -192,9 +192,10 @@ async function addFrontMatter(matterArr) {
 }
 
 async function undraft(filename) {
+    checkPostsDir();
     return fsPromises.rename(
         `${rootPath}/_drafts/${filename}.md`,
-        `${rootPath}/_posts/${filename}.md`
+        `${rootPath}/_posts/${getDate() + filename}.md`
     );
 }
 

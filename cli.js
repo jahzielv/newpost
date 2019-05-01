@@ -10,7 +10,8 @@ const {
     clean,
     createPostCustomFM,
     createDraft,
-    createDraftCustomFM
+    createDraftCustomFM,
+    undraft
 } = require("./newpost");
 const readlineSync = require("readline-sync");
 const isEmpty = require("lodash.isempty");
@@ -55,7 +56,6 @@ let argv = yargs
         "Creates a new MD blog post called <currentDate>-my_new_post.md with front matter specified, plus any values in config."
     )
     .demandCommand(1).argv;
-
 if (argv._.includes("init")) {
     console.log("Enter some front matter in this format: '<property>:<value>'");
     console.log("Type 'q' and hit enter to create your fm.json!");
@@ -89,6 +89,8 @@ if (argv._.includes("init")) {
             createDraft(postName, postName).catch(err => console.log(err.message));
         }
     }
+} else if (argv._.includes("undraft")) {
+    undraft(argv.post_name).catch(err => console.error(err.message));
 } else {
     let customFM = {};
     for (let fm in argv) {
