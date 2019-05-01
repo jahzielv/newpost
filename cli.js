@@ -27,19 +27,23 @@ let argv = yargs
                 "Create new blog posts for Jekyll/GitHub Pages sites quickly and easily!"
             )
     )
-    .usage("Usage: $0 [postname] [commands]")
+    .usage("Usage: $0 [commands] [post_name] [front_matter...]")
     .command("init", "Create a new front matter configuration in package.json.")
     .command(
-        "[postname]",
-        "Creates a new post called 'today-in-iso8601.[postname].md', with the front matter specified in your front matter config. The front matter title property is set to [postname] by default."
+        "post_name",
+        "Creates a new post called 'today-in-iso8601.post_name.md', with the front matter specified in your front matter config. The front matter title property is set to [postname] by default."
     )
     .command(
-        "[postname] [front matter args]",
-        "Create a new post Creates a new post called 'today-in-iso8601.[postname].md', with the front matter specified in the args as well as any specified in your front matter config. Arg values take precedence over config values."
+        "post_name [front_matter...]",
+        "Create a new post Creates a new post called 'today-in-iso8601.post_name.md', with the front matter specified in the args as well as any specified in your front matter config. Arg values take precedence over config values."
     )
     .command(
         "clean",
         "Removes all newpost front matter configuration data from package.json."
+    )
+    .command(
+        "undraft post_name",
+        "Move a draft called post_name.md to the /_posts folder."
     )
     .option("draft", { describe: "Make the new post a draft.", type: "boolean" })
     .example(
