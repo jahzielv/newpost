@@ -2,6 +2,12 @@
 
 We're following this [convention](https://keepachangelog.com/en/1.0.0/) for changelogs, as well as SemVer.
 
+## 1.1.1 - 2019-05-01
+
+## Fixed
+
+-   Got rid of unnecessary (and kinda silly) console output. Doesn't affect functionality.
+
 ## 1.1.0 - 2019-05-01
 
 ## Added
