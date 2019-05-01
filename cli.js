@@ -4,7 +4,14 @@ const ygn = require("yargonaut")
     .errors("Digital")
     .errorsStyle("red");
 let yargs = require("yargs");
-const { addFrontMatter, createPost, clean, createPostCustomFM } = require("./util");
+const {
+    addFrontMatter,
+    createPost,
+    clean,
+    createPostCustomFM,
+    createDraft,
+    createDraftCustomFM
+} = require("./newpost");
 const readlineSync = require("readline-sync");
 const isEmpty = require("lodash.isempty");
 
@@ -34,6 +41,7 @@ let argv = yargs
         "clean",
         "Removes all newpost front matter configuration data from package.json."
     )
+    .option("draft", { describe: "Make the new post a draft.", type: "boolean" })
     .example(
         "$0 my_new_post",
         "Creates a new MD blog post called <currentDate>-my_new_post.md"
@@ -58,6 +66,27 @@ if (argv._.includes("init")) {
         .catch(err => console.log("Error in creating newpost config: ", err));
 } else if (argv._.includes("clean")) {
     clean().catch(err => console.log(err.message));
+} else if (argv.draft) {
+    let customFM = {};
+    for (let fm in argv) {
+        if (fm !== "_" && fm !== "$0" && fm !== "draft") {
+            customFM[fm] = argv[fm];
+        }
+    }
+    if (!isEmpty(customFM)) {
+        console.log(customFM);
+        console.log("yeet");
+        createDraftCustomFM(customFM, argv._[0]).catch(err =>
+            console.log("the message: " + err.message)
+        );
+    } else {
+        let postName = argv._[0];
+        if (argv.t) {
+            createDraft(postName, argv.t).catch(err => console.log(err.message));
+        } else {
+            createDraft(postName, postName).catch(err => console.log(err.message));
+        }
+    }
 } else {
     let customFM = {};
     for (let fm in argv) {

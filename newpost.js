@@ -13,6 +13,14 @@ function checkPostsDir() {
     }
 }
 
+function checkDraftsDir() {
+    try {
+        fs.statSync(rootPath + "/_drafts");
+    } catch (err) {
+        fs.mkdirSync(rootPath + "/_drafts");
+    }
+}
+
 /**
  * Takes a front matter object and turns it into a string.
  * @param {Object} fm The front matter for a post, in a JS object.
@@ -107,6 +115,59 @@ async function createPostCustomFM(customFM, title) {
     }
 }
 
+async function createDraft(title, fmTitle) {
+    checkDraftsDir();
+    let packageJson = JSON.parse(
+        await fsPromises.readFile(rootPath + "/package.json", "utf8")
+    );
+    let configObj = packageJson.newpost;
+    if (!configObj) {
+        throw new Error(
+            "No front matter found; run newpost init to add some front matter!"
+        );
+    }
+    let frontMatter = configObj.frontMatter;
+
+    frontMatter.title = fmTitle;
+    let frontMatterStr = createFMString(frontMatter);
+    return fsPromises.writeFile(
+        rootPath + "/_drafts/" + getDate() + title + ".md",
+        frontMatterStr
+    );
+}
+
+async function createDraftCustomFM(customFM, title) {
+    checkDraftsDir();
+    try {
+        let packageJson = JSON.parse(
+            await fsPromises.readFile(rootPath + "/package.json", "utf8")
+        );
+
+        let configObj = packageJson.newpost;
+        if (!configObj) {
+            customFM = { ...{ title: title }, ...customFM };
+            let frontMatterStr = createFMString(customFM);
+            return fsPromises.writeFile(
+                rootPath + "/_drafts/" + getDate() + title + ".md",
+                frontMatterStr
+            );
+        } else {
+            let frontMatter = configObj.frontMatter;
+            frontMatter.title = title;
+            let combinedConfig = { ...frontMatter, ...customFM };
+
+            // frontMatter.title = fmTitle;
+            let frontMatterStr = createFMString(combinedConfig);
+            return fsPromises.writeFile(
+                rootPath + "/_drafts/" + getDate() + title + ".md",
+                frontMatterStr
+            );
+        }
+    } catch (err) {
+        throw err;
+    }
+}
+
 /**
  * Writes some given front matter to package.json.
  * @param {Array<String>} matterArr An array of strings, where each string contains a key:value front matter pair
@@ -154,5 +215,7 @@ module.exports = {
     createPost: createPost,
     createPostCustomFM: createPostCustomFM,
     addFrontMatter: addFrontMatter,
+    createDraft: createDraft,
+    createDraftCustomFM: createDraftCustomFM,
     clean: clean
 };
