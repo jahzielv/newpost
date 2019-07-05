@@ -1,6 +1,6 @@
 {
     "name": "newpost",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "description": "Make and manage your GitHub Pages/Jekyll blog post files.",
     "main": "cli.js",
     "author": "jve",
